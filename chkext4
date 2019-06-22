@@ -10,7 +10,7 @@
 # -------------------------------
 # dependancies: 
 
-function show_usage (){
+show_usage (){
     printf "\n"
     printf "Usage: [sudo] [sh] $0 [options [parameters]]\n"
     printf "\n"
