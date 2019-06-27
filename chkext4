@@ -93,13 +93,13 @@ fi
 
 sudo mount "${var_target}" "${target_filesystem}"
 
-printf "\n"
-printf "*** chown -R ${target_user}:${target_user} ${target_filesystem} on ${var_target}\n"
-sudo chown -R "${target_user}":"${target_user}" "${target_filesystem}"
+#printf "\n"
+#printf "*** chown -R ${target_user}:${target_user} ${target_filesystem} on ${var_target}\n"
+#sudo chown -R "${target_user}":"${target_user}" "${target_filesystem}"
 
-printf "\n"
-printf "*** chmod -R 775 ${target_filesystem} on ${var_target}\n"
-sudo chmod -R 775 "${target_filesystem}"
+#printf "\n"
+#printf "*** chmod -R 775 ${target_filesystem} on ${var_target}\n"
+#sudo chmod -R 775 "${target_filesystem}"
 
 printf "\n"
 printf "*** $0 done...\n"
