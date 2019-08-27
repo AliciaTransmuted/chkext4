@@ -2,8 +2,8 @@
 
 #-------------------------------
 # chkext4
-# version 1.0
-# Shell script unmounts target ext4 filesystem, checks it, remounts the filesystem, and refreshes current owner and group permissions
+# version 1.1
+# Shell script unmounts target ext4 filesystem, checks it, remounts the filesystem, and refreshes current owner and group permissions (if selected)
 # June 17, 2019
 # AliciaTransmuted
 # https://github.com/AliciaTransmuted/chkext4
@@ -17,6 +17,8 @@ show_usage (){
     printf "Options:\n"
     printf " $color_on-f|--filesystem$color_off, Filesystem to be checked I.E. $color_on-f /media/$target_user/filesystem-name$color_off\n"
     printf " $color_on-b|--badblocks$color_off, Check all blocks for errors (this takes a long time!) I.E. $color_on-b$color_off\n"
+    printf " $color_on-o|--chown$color_off, Run chown after (using current username) I.E. $color_on-o$color_off\n"
+    printf " $color_on-m|--chmod$color_off, Run chmod after (using 775 as a modifier) I.E. $color_on-m$color_off\n"
     printf " $color_on-h|--help$color_off, Print help (this dialog) I.E. $color_on-h$color_off\n"
     printf "\n"
     printf "$0 unmounts the target ext4 filesystem, checks it, remounts the filesystem, and refreshes owner and group permissions\n"
@@ -35,6 +37,8 @@ color_on="${color_green}"
 color_off="\e[0m"
 
 bad_blocks="N"
+do_chown="N"
+do_chmod="N"
 target_filesystem="empty"
 target_user=$USER
 
@@ -52,6 +56,12 @@ while [ ! -z "$1" ]; do
          ;;
      --badblocks|-b)
          bad_blocks="Y"
+         ;;
+     --chown|-o)
+         do_chown="Y"
+         ;;
+     --chmod|-m)
+         do_chmod="Y"
          ;;
      --help|-h)
          show_usage
@@ -93,13 +103,17 @@ fi
 
 sudo mount "${var_target}" "${target_filesystem}"
 
-#printf "\n"
-#printf "*** chown -R ${target_user}:${target_user} ${target_filesystem} on ${var_target}\n"
-#sudo chown -R "${target_user}":"${target_user}" "${target_filesystem}"
+if [ "${do_chown}" = "Y" ];then
+   printf "\n"
+   printf "*** chown -R ${target_user}:${target_user} ${target_filesystem} on ${var_target}\n"
+   sudo chown -R "${target_user}":"${target_user}" "${target_filesystem}"
+fi
 
-#printf "\n"
-#printf "*** chmod -R 775 ${target_filesystem} on ${var_target}\n"
-#sudo chmod -R 775 "${target_filesystem}"
+if [ "${do_chmod}" = "Y" ];then
+   printf "\n"
+   printf "*** chmod -R 775 ${target_filesystem} on ${var_target}\n"
+   sudo chmod -R 775 "${target_filesystem}"
+fi
 
 printf "\n"
 printf "*** $0 done...\n"
